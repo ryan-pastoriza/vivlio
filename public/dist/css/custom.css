@@ -1,0 +1,198 @@
+.vivlio_center{text-align: center!important;}
+.vilio_no_padding,.v_nopadding{padding:0!important;}
+.vivlio_color_primary{color:#006666!important; }
+.skin-black .main-header>.navbar>.sidebar-toggle{color: #006666!important;}
+.skin-black .main-header>.navbar,
+.skin-black .main-header>.logo{background-color: #eee!important;}
+.skin-black .main-header>.navbar .nav>li>a:hover,
+.skin-black .main-header>.navbar .nav>li>a:active,
+.skin-black .main-header>.navbar .nav>li>a:focus,
+.skin-black .main-header>.navbar .nav .open>a, 
+.skin-black .main-header>.navbar .nav .open>a:hover, 
+.skin-black .main-header>.navbar .nav .open>a:focus{}
+.skin-black .wrapper, 
+.skin-black .main-sidebar, 
+.skin-black .left-side, 
+.skin-black .main-header li.user-header{background-color: #004040!important;}
+.skin-black .sidebar-menu>li:hover>a, 
+.skin-black .sidebar-menu>li.active>a{background-color:#006666!important; }
+.skin-black .sidebar-menu>li:hover>a, 
+.skin-black .sidebar-menu>li.active>a{border-left-color:#006666!important;}
+.skin-black .sidebar a{color:#ffffff!important;}
+.navbar-nav>.notifications-menu>.dropdown-menu>li.header, 
+.navbar-nav>.messages-menu>.dropdown-menu>li.header, 
+.navbar-nav>.tasks-menu>.dropdown-menu>li.header,
+.navbar-nav>.notifications-menu>.dropdown-menu>li.footer>a,
+.navbar-nav>.messages-menu>.dropdown-menu>li.footer>a, 
+.navbar-nav>.tasks-menu>.dropdown-menu>li.footer>a{background-color:#004040!important;color: white!important;}
+.skin-black .main-header>.navbar .nav>li>a:hover, 
+.skin-black .main-header>.navbar .nav>li>a:active, 
+.skin-black .main-header>.navbar .nav>li>a:focus, 
+.skin-black .main-header>.navbar .nav .open>a, 
+.skin-black .main-header>.navbar .nav .open>a:hover, 
+.skin-black .main-header>.navbar .nav .open>a:focus,
+.skin-black .main-header>.navbar .sidebar-toggle:hover{background-color:#e1eaea!important; }
+.skin-black .main-header>.navbar .nav>li>a{color:#004040!important; }
+.small-box{color: #004040!important;}
+.small-box:hover{color: #008c8c!important;cursor: pointer;}
+.box.box-primary-vivlio{border-top-color: #ffffff!important;}
+.carousel-inner>.item>a>img,
+.carousel-inner>.item>img, 
+.img-responsive, 
+.thumbnail a>img, .thumbnail>img{max-width: 80%!important;}
+
+
+
+
+/*Dashboard*/
+.vivlio_color_pale_prime{color:#40A7A7!important;}
+.vivlio_color_prime{color:#008C8C!important;}
+.bg-primary-vivlio{background: #008C8C!important; color: white!important;}
+.vivlio_padding_left_20{padding-left: 20px!important;}
+.vivlio_no_padding{padding: 0!important;}
+.with_border_left{border-left: 1px solid #bbd8d8!important; }
+.with_border_right{border-right: 1px solid #bbd8d8!important;}
+.with_border_bottom{border-bottom: 3px solid #eee!important; text-align: center;}
+.with_border_bottom_color_prime{border-bottom: 2px solid #008C8C!important;}
+.skin-black .main-header>.navbar .nav>li>a{color:#004040!important; }
+#bar-chart{height: 300px;}
+
+
+
+/*circulation(Loan)*/
+.vivlio_2nd_nav{margin:auto;text-align: center; height:auto;padding-bottom: 7px; padding-top: 7px;}
+.vivlio-header{background: #006666!important;color: white!important; border-top-left-radius: 6px !important; border-top-right-radius: 6px!important;}
+.patron_header_name, .patron_2nd_name,.patron_course, 
+.patron_view_info,.patron_summary,
+.patron_container_number{color: #006666!important;}
+.patron_acc_number{color: #FF9326!important;}
+.patron_header_name,.vivlio_item_header{font-size: 1.7em!important;}
+.patron_2nd_name, .patron_acc_number{font-size: 1.2em!important;}
+.patron_course{font-size: 0.9em!important;}
+.patron_course_title{font-size: 0.7em!important;font-weight: 600!important;}
+.patron_view_info{font-size: 0.9em!important;}
+.vivlio_search{padding: 1px!important;width: 100%!important;color:black;padding:3px!important;}
+.patron_summary{font-size: 0.8em!important; font-weight: 400!important;}
+.patron_container_number{font-size: 4em!important;}
+.background-peach{background:#FFEFBF!important;padding-bottom: 1px!important;}
+.patron_padding_{padding-left: 7px!important; padding-right:7px!important;}
+.patron_container_number_2{font-size: 2.5em!important;}
+.vivlio_item_header{font-weight: 400!important;color: #3FA6A6!important;}
+.vilio_item_details{font-weight: 700!important; font-size:0.9em;}
+.vivlio_item_header_quantity{font-size: 3em!important;font-weight: 600!important;color: #3FA6A6!important;}
+.vivlio_transaction_code{font-size: 1.4em!important;color: #3FA6A6!important;}
+.vilio_edition{font-size: 1.3em!important;color: #3FA6A6!important;}
+.vivlio_author{font-size: 1em!important;color: #3FA6A6!important;}
+.vivlio_btn_remove{font-size: 10px; width: 100%;}
+.vivlio_btn_transaction{font-size: 0.7em!important;height: 25px; width: }
+
+/* #Nephritis Flat Button
+==================================================*/
+.nephritis-flat-button {
+  position: relative;
+  vertical-align: top;
+  width: 100%;
+  height: 35px;
+  padding: 0;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 2px #008c8c;
+  background: #008c8c;
+  border: 0;
+  border-bottom: 2px solid #008c8c;
+  cursor: pointer;
+  -webkit-box-shadow: inset 0 -2px #008c8c;
+  box-shadow: inset 0 -2px #008c8c;
+}
+
+.nephritis-flat-button:active {
+  top: 1px;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/*circulation(Borrow)*/
+.code_trans{color: #006666;font-size: 17px; font-weight: 400;}
+.date_trans{color: #3FA6A6;font-size: 15px; font-weight: 400;}
+.name_trans{color: #3FA6A6;font-size: 12px; font-weight: 400;}
+.checkbox_trans{font-size: 15px;}
+
+/*dataTables Custom*/
+.dataTables_length, table thead, .col-sm-6>#vivlio_number_2_filter{display: none!important;}
+.pagination>.active>a:focus,
+ .pagination>.active>a:hover,
+  .pagination>.active>span,
+   .pagination>.active>span:focus,
+    .pagination>.active>span:hover,
+     .pagination>.active>a{
+       background:#006666;
+       outline: 0;
+}
+
+
+
+
+/*Font Color*/
+.v_l_primary{color: #006666!important;}
+.v_m_primary{color: #008C8C!important;}
+.v_s_primary{color: #40A7A7!important;}
+
+.v_EEEEE{color: #006666!important;}
+
+
+
+
+/*card*/
+.v_card{text-align: center;background: #FFFFFF;height: 100%;min-height: 170px;max-height: 170px;border-left: 4px solid #ecf0f5!important;}
+.v_card_body{height:70px;background: #FFFFFF!important;min-height: 80px!important;max-height: 75px!important;}
+.v_card_footer{font-size:10px!important;background: #006666!important;min-height: 45px!important;max-height: 45px!important;color: #ecf0f5;overflow: hidden!important;}
+.v_loan_content{font-size: 1.5em;line-height: 45px;}
+.v_card_header_item_1{font-size: 1.4em!important;}
+.v_card_header_item_2{font-size:0.7em!important; }
+.v_card_body_item{font-size: 3.2em!important;}
+.v_card_footer_item_2{font-size: 1.2em!important; text-align: left!important;line-height: 24px;}
+
+/*box*/
+.v_box{height: auto; display: block; width: 100%; background: white; border-left: 4px solid #ecf0f5!important;}
+.v_box_header{width:100%!important; height: 60px; min-height: 60px; max-width: 65px; background: orange;}
+.v_box_footer{width:100%!important; height: 60px; min-height: 60px; max-width: 65px; background: green;}
+.v_box_content{padding: 2px; background: white;}
+
+.v_fines_{font-size: 4em;text-align: center; font-weight: 400;}
+.v_fines_footer{line-height: 32px; width: 100%; background: #006666; color: #eee!important;}
+
+
+.tbl_header{ overflow: clear;position: relative; padding-top: 3px;}
+.tbl_table{background: #fff;border-collapse: collapse;color: #222;font-family: 'PT Sans', sans-serif;font-size: 13px;width: 100%;}
+.tbl_table tr td{ border: 1px solid #ccc;color: #008C8C;line-height: 22px;text-align: center;}
+.tbl_table tr:first-child td{color: #006666;font-weight: 700;}
+.tbl_selected{background: #40a7a7;border: 0;box-shadow: 0 2px 6px rgba(0, 0, 0, .5) inset; color: white!important;}
+.tbl_container{background: rgba(0, 0, 0, .1);border-radius: 5px;box-sizing: border-box;padding: 15px;width: 220px;}
+.tbl_h2{ font-size: 16px;font-weight: 700;margin: 0 0 5px;text-align: right;}
+
+.cal_row{height: 100%; background: #006666;}
+.cal_header{padding: 2px; padding-top: 1px; text-align: center; font-size: 14px; font-weight: 400; color: white!important; border-bottom:1px solid white;}
+.cal_container{text-align: center;font-size: 5.5em;height:103px; color: white; border-bottom: 1px solid white!important;}
+.cal_footer{font-size:12px;padding: 2px; height: 40px; padding-top:1px solid white; font-weight: 200; background:#006666; color: white!important; padding-bottom: 15px; text-align: center;}
+
+
+
+#vivlio_table_filter label{color: #006666!important;}
+.dataTables_info,.dataTables_info{
+       color: #006666;
+}
+.dataTables_paginate {font-size: 10px;}
+
+
+@media screen and (min-width:1920px){
+  .carousel-inner>.item>a>img,
+  .carousel-inner>.item>img, 
+  .img-responsive, 
+  .thumbnail a>img, .thumbnail>img{max-width: 50%!important;}
+
+
+  /*dashboard*/
+  #bar-chart{height: 400px;}
+}

@@ -1,0 +1,58 @@
+body{ 
+      background: url(../../images/background_image.fw.png) no-repeat center center fixed; 
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+
+
+
+
+.vivlio_margin_auto{
+	margin: 0px auto;
+	float: none;
+}
+.vivlio_btn_dark{
+	color: white;
+	background: gray;
+	border:none;
+}
+
+.vivlio_text_align_center{
+	text-align: center;
+}
+
+
+.vivlio_height_spacer_30{
+	height: 30px !important;
+}
+.vivlio_height_spacer_60{
+	height: 60px !important;
+}
+.vivlio_height_spacer_90{
+	height: 90px !important;
+}
+.vivlio_height_spacer_120{
+	height: 120px !important;
+}
+.vivlio_height_spacer_150{
+	height: 150 !important;
+}
+
+.vivlio_height_spacer_10_cent{
+	height: 10%!important;
+}
+.vivlio_height_spacer_20_cent{
+	height: 20%!important;
+}
+.vivlio_height_spacer_30_cent{
+	height: 30%!important;
+}
+.vivlio_height_spacer_40_cent{
+	height: 40%!important;
+}
+.vivlio_height_spacer_50_cent{
+	height: 50%!important;
+}
