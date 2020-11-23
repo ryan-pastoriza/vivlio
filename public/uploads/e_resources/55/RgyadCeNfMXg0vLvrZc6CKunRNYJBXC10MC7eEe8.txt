@@ -1,0 +1,70 @@
+Chie-ann Bebis
+1.	Introduction to Data Mining 
+o	What is data mining? 
+o	Related technologies - Machine Learning, DBMS, OLAP, Statistics 
+o	Data Mining Goals 
+o	Stages of the  Data Mining Process 
+o	Data Mining Techniques 
+o	Knowledge Representation Methods 
+o	Applications 
+o	Example: weather data 
+
+Genesis Almonte
+2.	Data Warehouse and OLAP 
+o	Data Warehouse and DBMS 
+o	Multidimensional data model 
+o	OLAP operations 
+o	Example: loan data set 
+
+Amasanenier Deloso
+3.	Data preprocessing 
+o	Data cleaning 
+o	Data transformation 
+o	Data reduction 
+o	Discretization and generating concept hierarchies 
+
+Von Carlo Dumago
+4.	Data mining knowledge representation 
+o	Task relevant data 
+o	Background knowledge 
+o	Interestingness measures 
+o	Representing input data and output knowledge 
+o	Visualization techniques 
+
+Rhaven Therese Lavadia
+5.	Attribute-oriented analysis 
+o	Attribute generalization 
+o	Attribute relevance 
+o	Class comparison 
+o	Statistical measures 
+
+Cynthia Bucong
+6.	Data mining algorithms: Association rules 
+o	Motivation and terminology 
+o	Example: mining weather data 
+o	Basic idea: item sets 
+o	Generating item sets and rules efficiently 
+o	Correlation analysis 
+
+Almery Chan
+7.	Data mining algorithms: Classification 
+o	Basic learning/mining tasks 
+o	Inferring rudimentary rules: 1R algorithm 
+o	Decision trees 
+o	Covering rules 
+
+Ritz Ocite
+8.	Data mining algorithms: Prediction
+o	The prediction task 
+o	Statistical (Bayesian) classification 
+o	Bayesian networks 
+o	Instance-based methods (nearest neighbor) 
+o	Linear models 
+
+Zoren Bajao
+9.	Evaluating what's been learned
+o	Basic issues 
+o	Training and testing 
+o	Estimating classifier accuracy (holdout, cross-validation, leave-one-out) 
+o	Combining multiple models (bagging, boosting, stacking) 
+o	Minimum Description Length Principle (MLD) 

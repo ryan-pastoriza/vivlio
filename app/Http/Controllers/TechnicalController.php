@@ -144,8 +144,13 @@ class TechnicalController extends Controller
         $dir = base_path()."/public/uploads/e_resources/".$request->input('res_id')."/";
         /* var_export($dir); */
         $files = File::allFiles($dir);
+        $headers = array(
+                  'Content-Type'=> 'application/pdf'
+                );
         foreach ($files as $file){
-            return response()->download($file);
+            return response()->download($file,'<filename>',$headers);
+            // return response()->streamDownload($file);
+
         }
     }
 }

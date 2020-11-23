@@ -343,7 +343,8 @@ class CatalogController extends Controller
         $fv = new FieldValue();
         $msfs = new marc_subfield_structure();
         $cr = new CatalogueRecord();
-        $id = $marc->get_id_by_tag_field('020');
+        // $id = $marc->get_id_by_tag_field('020');
+        $id = $marc->get_id_by_tag_name(['International standard book number']);
         $catalogInfo = null;
         # check if isbn is null;
         // echo $id;

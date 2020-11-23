@@ -1,0 +1,14 @@
+https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
+https://codelabs.developers.google.com/codelabs/webrtc-web/#0
+https://codelabs.developers.google.com/codelabs/webrtc-web/#6
+
+HTML5
+CSS3
+SASS
+JS
+git
+ReactJS
+NodeJS
+ExpressJS
+NOSQL/SQL
+

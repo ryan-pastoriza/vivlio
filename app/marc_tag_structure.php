@@ -74,5 +74,8 @@ class marc_tag_structure extends Model
     public function get_id_by_tag_field($tagfield){
          return $this->select('id')->where('tagfield', $tagfield)->get()->first()['id'];
     }
+    public function get_id_by_tag_name($tagname){
+         return $this->select('id')->whereIn('tagname', $tagname)->get()->first()['id'];
+    }
 
 } 

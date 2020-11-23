@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use App\LibMaterialType;
 use App\FieldValue;
 use App\CatalogueRecord;
 use App\patrons;
@@ -156,13 +157,19 @@ class OpacController extends Controller
         $search = FieldValue::where("value","REGEXP","_.[\s\S]*".$q."[\s\S]*")->groupBy('catalogue_id')->get(['catalogue_id']);
         $result = [];
         foreach( $search as $catalogue_id){
-            $callnum =CatalogueRecord::where('catalogue_id',$catalogue_id->catalogue_id)->get(['call_num'])->first()->call_num;
+            $catRec = CatalogueRecord::where('catalogue_id',$catalogue_id->catalogue_id)->get(['call_num','material_type_id'])->first();
             $title = substr(explode('_',FieldValue::where('id',16)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value']))[1],1);
             $edition = substr(explode('_',FieldValue::where('id',17)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
             $isbn = substr(explode('_',FieldValue::where('id',14)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
+            $author = substr(explode('_',FieldValue::where('id',15)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value']))[1],1);
+            $datePub = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[3],1 );
+            $publisher = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[2],1 );
+            $physDesc = substr( explode('_',FieldValue::where('id',19)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1 );
             $copiesNum = Copies::where('status','available')->where('catalogue_id', $catalogue_id->catalogue_id)->count();
             $copiesTotal = Copies::where('catalogue_id', $catalogue_id->catalogue_id)->count();
-            array_push($result,['title' => $title, 'call_num'=> $callnum, 'edition' => $edition, 'isbn' => $isbn, 'copies_available' => $copiesNum, 'copies_total' => $copiesTotal, 'catalogue_id' => $catalogue_id->catalogue_id]);
+            $matType = LibMaterialType::where('material_type_id',$catRec->material_type_id)->get(['name'])->first();
+            $matType = sizeof($matType) >0 ? $matType->name:'N/A';
+            array_push($result,['title' => $title, 'call_num'=> $catRec->call_num, 'edition' => $edition, 'isbn' => $isbn, 'copies_available' => $copiesNum, 'copies_total' => $copiesTotal, 'catalogue_id' => $catalogue_id->catalogue_id, 'material_type'=>$matType,'date_publication' => $datePub, 'author'=>$author,'publisher'=>$publisher,'physDesc'=>$physDesc]);
         }
         $end =  microtime(true);
 
