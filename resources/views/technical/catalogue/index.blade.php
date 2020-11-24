@@ -749,11 +749,9 @@ $(document).ready(function(){
   	$('#btn-search-catalog').trigger('click');
     $('#btn-save-fmr').removeAttr('disabled');
   });
-  $(document).on('click','#btn-marc-print', function(e){
-  	e.preventDefault();
-  	$(this).attr('isbn');
-  });
 function call_accession_book(element) {
+
+	$('#accession-book-space').html('Loading...');
 	$.ajax({
 		type: 'POST',
 		url: "{{url('/technical/accession_book')}}",

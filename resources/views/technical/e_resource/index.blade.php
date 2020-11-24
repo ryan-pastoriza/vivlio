@@ -143,10 +143,9 @@
 			var id = $(this).attr('resource-id');
 			var url = 'downloadFile';
 			var data = {_token:"{{csrf_token()}}",res_id:id}
-			// window.location = url,data;
 			var posting = $.post(url,data);
 				posting.done(function(data){
-					 // $('#test').html(data);
+					 $('#test').html(data);
 				});
 		});
 		$('#sbmit-resource').submit(function(e){

@@ -211,7 +211,7 @@ class CatalogController extends Controller
 
     public function accession_book(){
         /* -------------------------- */
-      
+      	ini_set('max_execution_time',9999999);
         $fv           = new FieldValue();
         $cr           = new CatalogueRecord();
         $ids          = CatalogueRecord::orderBy('catalogue_id', 'ASC')->pluck('catalogue_id')->toArray();
@@ -343,8 +343,7 @@ class CatalogController extends Controller
         $fv = new FieldValue();
         $msfs = new marc_subfield_structure();
         $cr = new CatalogueRecord();
-        // $id = $marc->get_id_by_tag_field('020');
-        $id = $marc->get_id_by_tag_name(['International standard book number']);
+        $id = $marc->get_id_by_tag_field('020');
         $catalogInfo = null;
         # check if isbn is null;
         // echo $id;

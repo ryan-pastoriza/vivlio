@@ -169,6 +169,9 @@ class OpacController extends Controller
             $copiesTotal = Copies::where('catalogue_id', $catalogue_id->catalogue_id)->count();
             $matType = LibMaterialType::where('material_type_id',$catRec->material_type_id)->get(['name'])->first();
             $matType = sizeof($matType) >0 ? $matType->name:'N/A';
+
+            // $issn = substr(explode('_',FieldValue::where('id',14)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
+            
             array_push($result,['title' => $title, 'call_num'=> $catRec->call_num, 'edition' => $edition, 'isbn' => $isbn, 'copies_available' => $copiesNum, 'copies_total' => $copiesTotal, 'catalogue_id' => $catalogue_id->catalogue_id, 'material_type'=>$matType,'date_publication' => $datePub, 'author'=>$author,'publisher'=>$publisher,'physDesc'=>$physDesc]);
         }
         $end =  microtime(true);

@@ -45,10 +45,10 @@
                   <p style="margin-bottom:0px"><small>Welcome:</small> {{$data['user_info']['full_name']}}</p>
                   <center> {{$data['user_info']['position']}}</center>
                 </div>
-                <!-- <img src="{{asset('public/_color/img/user-1.jpg')}}" class="img img-responsive pull-right m-l-10" style="height:40px;width:40px"> -->
+                <img src="{{asset('public/_color/img/user-1.jpg')}}" class="img img-responsive pull-right m-l-10" style="height:40px;width:40px">
               </a>
               <ul class="dropdown-menu">
-                <!-- <li><a href="#" onclick="$('#modalChangePic').modal('show')"><i class="fa fa-image"></i> Change Profile Image</a></li> -->
+                <li><a href="#" onclick="$('#modalChangePic').modal('show')"><i class="fa fa-image"></i> Change Profile Image</a></li>
                 <li><a href="settings"><i class="fa fa-gear"></i> Account Settings</a></li>
                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Logout</a></li>
               </ul>

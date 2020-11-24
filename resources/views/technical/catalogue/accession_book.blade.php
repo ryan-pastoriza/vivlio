@@ -28,7 +28,6 @@
         <a href="#holdings-modal-dialog" data-toggle="modal" class="btn btn-primary btn-sm m-r-5 m-b-5 disabled" id="btn-add-copy"> <i class="fa fa-street-view"></i> View Copies</a>
         <a href="#holdings-edit-modal-dialog" data-toggle="modal" class="btn btn-danger btn-sm m-r-5 m-b-5 disabled" id="btn-edit-copy"> <i class="fa fa-pencil"></i> Edit</a>
         <a class="btn btn-danger btn-sm m-r-5 m-b-5 disabled" id="btn-marc-edit" isbn=""> <i class="fa fa-pencil"></i> Full Marc Edit</a>
-        <a class="btn btn-danger btn-sm m-r-5 m-b-5 disabled" id="btn-marc-print" isbn=""> <i class="fa fa-print"></i> Full Marc Print</a>
         <a href="#modal-confirm-delete" data-toggle="modal" class="btn btn-danger btn-sm m-r-5 m-b-5 disabled" id="btn-delete" catalogue_id=""> <i class="fa fa-trash"></i> Delete</a>
         <button id="refresh-accession-book"><i class="fa fa-refresh"></i> Refresh </button> 
     </div>
@@ -445,7 +444,6 @@ $(document).ready(function(){
           $('#btn-add-copy').addClass('disabled');
           $('#btn-edit-copy').addClass('disabled');
           $('#btn-marc-edit').addClass('disabled');
-          $('#btn-marc-print').addClass('disabled');
           $('#btn-delete').addClass('disabled');
       }
       else {
@@ -469,7 +467,6 @@ $(document).ready(function(){
 
           $("#btn-edit-copy").attr('toEdit',id);
           $("#btn-marc-edit").attr('isbn', clickedISBN);
-          $("#btn-marc-print").attr('isbn', clickedISBN);
           
           get_copies(id, tblCopies);
 
@@ -479,7 +476,6 @@ $(document).ready(function(){
           $('#btn-add-copy').removeClass('disabled');
           $('#btn-delete').removeClass('disabled');
           $('#btn-marc-edit').removeClass('disabled');
-          $('#btn-marc-print').removeClass('disabled');
           $('#btn-edit-copy').removeClass('disabled');
       }
   } );
