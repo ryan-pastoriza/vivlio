@@ -152,6 +152,7 @@ class OpacController extends Controller
         return $reserve;
     }
     public function loadSearches(Request $request){
+        ini_set('max_execution_time',9999999);
         $start = microtime(true);
         $q = $request->input('q');
         $search = FieldValue::where("value","REGEXP","_.[\s\S]*".$q."[\s\S]*")->groupBy('catalogue_id')->get(['catalogue_id']);

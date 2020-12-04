@@ -114,6 +114,7 @@ Route::post('technical/populate', 'technical\CatalogController@populate');
 Route::post('technical/accession_book', 'technical\CatalogController@accession_book');
 Route::post('technical/add_copy', 'technical\CatalogController@add_copy');
 Route::post('technical/get_copies', 'technical\CatalogController@get_copies');
+Route::post('technical/delete_copy', 'technical\CatalogController@delete_copy');
 Route::post('technical/add_marc_record', 'technical\CatalogController@add_marc_record');
 Route::post('technical/update_marc_record', 'technical\CatalogController@update_marc_record');
 Route::post('technical/get_record_by_isbn', 'technical\CatalogController@get_record_by_isbn');

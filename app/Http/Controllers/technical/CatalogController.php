@@ -106,30 +106,50 @@ class CatalogController extends Controller
         $copy = new Copies();
 
         // return $request->input();
-        $copy->acc_num = $request->input('acc_num');
-        $copy->catalogue_id = $request->input('catalogue_id');
-        $copy->barcode = $request->input('barcode');
-        $copy->source = $request->input('source');
-        $copy->status = 'available';
-        $copy->note = $request->input('note');
-        $copy->issues = $request->input('issues');
-        $copy->date_received = $request->input('date_received');
-        $copy->copy_number = Copies::where('catalogue_id',$request->input('catalogue_id'))->max('copy_number')+1;
-        
+        if($request->input('copy_id')){
+            $copy->where('copy_id', $request->input('copy_id') )
+            ->update([
+                'barcode'=>$request->input('barcode'),
+                'acc_num'=>$request->input('acc_num'),
+                'issues'=>$request->input('issues'),
+                'date_received'=>$request->input('date_received'),
+                'note'=>$request->input('note'),
+                'source'=>$request->input('source')
+            ]);
+            return 2;
+        }else{
 
-        if ( $result = $copy->save() ){
-            return 1;
+            $copy->acc_num = $request->input('acc_num');
+            $copy->catalogue_id = $request->input('catalogue_id');
+            $copy->barcode = $request->input('barcode');
+            $copy->source = $request->input('source');
+            $copy->status = 'available';
+            $copy->note = $request->input('note');
+            $copy->issues = $request->input('issues');
+            $copy->date_received = $request->input('date_received');
+            $copy->copy_number = Copies::where('catalogue_id',$request->input('catalogue_id'))->max('copy_number')+1;
+            
+
+            if ( $copy->save() ){
+                return 1;
+            }
+
         }
-
         return 0;
         
+    }
+    public function delete_copy(Request $request){
+        return Copies::where('copy_id',$request->input('id'))->delete();
     }
     public function get_copies(Request $request){
 
         $catalogue_id = $request->input('catalogue_id');
         
         $copy = new Copies();
-        $copies = $copy->where('catalogue_id', $catalogue_id)->get()->toArray();
+        $copies = $copy->where('catalogue_record.catalogue_id', $catalogue_id)
+        ->join('catalogue_record','catalogue_record.catalogue_id','=','copies.catalogue_id')
+        ->join('lib_material_type','catalogue_record.material_type_id','=','lib_material_type.material_type_id')
+        ->get()->toArray();
         // $catRec = CatalogueRecord::where('catalogue_id', $catalogue_id)->get()->toArray();
         // var_dump($copies);
         // var_dump($catRec);
@@ -214,7 +234,7 @@ class CatalogController extends Controller
       	ini_set('max_execution_time',9999999);
         $fv           = new FieldValue();
         $cr           = new CatalogueRecord();
-        $ids          = CatalogueRecord::orderBy('catalogue_id', 'ASC')->pluck('catalogue_id')->toArray();
+        $ids          = CatalogueRecord::orderBy('catalogue_id', 'ASC')->limit(50)->pluck('catalogue_id')->toArray();
         $copies       = new Copies();
 
 
@@ -233,6 +253,14 @@ class CatalogController extends Controller
         // isbn                fv                   [''] tag020 A
 
 
+        // return( CatalogueRecord::join('copies','copies.catalogue_id','=','catalogue_record.catalogue_id')
+        //                 ->join('field_value','copies.catalogue_id','=','catalogue_record.catalogue_id')
+        //                 ->groupBy('copies.catalogue_id')
+        //                 ->select('*')
+        //                 ->limit(10)
+        //                 ->get()
+        //                 ->toArray()
+        //             );
 
         foreach ($ids as $id) {
             
@@ -240,14 +268,9 @@ class CatalogController extends Controller
             $records[$id]['copies'] = $copies::where('catalogue_id', $id)->get()->count();
             $records[$id][] = $fv->accession_by_id($id);
 
-            // echo '<pre>';
-            //     var_export($records);
-            // echo '</pre>';
-
-            // break;
-
         }
 
+        // return $records;
         // $array        = array('call_number', 'author', 'title', 'edition', 'volume');
         // $records = array();
         
@@ -266,6 +289,7 @@ class CatalogController extends Controller
         
         // return response()->json(['data' => $records]);
         // dd($records);
+
         return view('technical.catalogue.accession_book', compact(['records']));
 
     }
