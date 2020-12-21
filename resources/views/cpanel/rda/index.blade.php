@@ -709,6 +709,33 @@
 
 		$(document).on('click', '#btn-remove-template-tags', function(e){
 			e.preventDefault();
+			var value = $('#select-template-list').val();
+
+			$.ajax({
+				url		: "{{url('/template/remove_template')}}", 
+				type 	: 'POST',
+				data 	:  { _token: "{{csrf_token()}}", template_id: value },
+				success : function(data){
+					if( data == 1 ) {
+						$.gritter.add({
+							title:"<i class='fa fa-check text-success'></i> Template has been Removed!",
+							text:"",
+							sticky:false,
+							time:""
+						});
+					}else{
+						$.gritter.add({
+							title:"<i class='fa fa-check text-success'></i> Failed to remove template!",
+							text:"",
+							sticky:false,
+							time:""
+						});
+					}
+
+					populate_template($('#select-template-list'));	
+					
+				},
+			});
 			//get id from select.
 		});
 

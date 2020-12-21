@@ -21,7 +21,7 @@ class Patron_information extends Model
     public $timestamps = true;
     protected $primaryKey = 'patron_id';
     protected $fillable = [
-            'patron_id', 'full_name', 'gender', 'dob', 'student_id', 'course', 'contact_no', 'address' ,
+            'patron_id', 'full_name', 'gender', 'dob', 'student_id', 'department', 'course', 'contact_no', 'address' ,
     ];
     public function add($ID,$request = [])
     {
@@ -31,6 +31,7 @@ class Patron_information extends Model
             $this->gender = $request['_gender'];
             $this->dob = $request['_birthday'];
             $this->student_id = $request['_student_id'];
+            $this->department = $request['_department'];
             $this->course = strtoupper($request['_course']);
             $this->contact_no = $request['_contact'];
             $this->address = $request['_address'];

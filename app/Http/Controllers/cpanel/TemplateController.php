@@ -55,6 +55,18 @@ class TemplateController extends Controller
 		return 0;
 	}
 
+	public function remove_template(Request $request){
+		$template_id = $request->input('template_id');
+		if( marc_tag_structure_cat_templates::where(['template_id'=>$template_id])->delete() ){
+			if( cat_templates::where(['template_id'=>$template_id])->delete() ){
+				return 1;
+			}
+			return 2;
+		}
+		return 0;
+		
+	}
+
 	public function fetch_tags(Request $request){
 		
 		$template_id = $request->input('template_id');

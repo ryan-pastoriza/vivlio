@@ -13,10 +13,10 @@ use Carbon\Carbon;
 class ReportController extends Controller
 {
     public function __construct()
-	{
-		$this->middleware('auth');
-	}
-	
+  {
+    $this->middleware('auth');
+  }
+  
     /**
      * Display a listing of the resource.
      *
@@ -159,50 +159,61 @@ class ReportController extends Controller
                 }
               return json_encode($fetch);
         }else if ($request->input('category') == 'borrow'){
-            if(!empty($request->input('mnt'))){
-                  $borrows = Loans::whereYear('created_at','=',$request->input('yr'))->whereMonth('created_at','=',$request->input('mnt'))->get();
-                }else{
-                    $borrows = Loans::whereYear('created_at','=',$request->input('yr'))->get();
-                }
-              foreach ($borrows as $key => $value) {
-                $fetch[] = ['patron_id'=>$value->patron_id,'acc_num'=>$value->acc_num,'due_date'=>date('M-d-Y', strtotime($value->due_date)),'returned'=>date('M-d-Y', strtotime($value->returned_date)),'loaned'=>date('M-d-Y', strtotime($value->loaned_date))];
-              }
-              return json_encode($fetch);
+
+            $borrows = Loans::join('patron_information','patron_information.patron_id', '=','loans.patron_id');
+            if( $request->input('department') != ""){
+              $borrows = $borrows->where('patron_information.department','=',$request->input('department'));
+            }
+            if( $request->input('yr') != ""){
+              $borrows = $borrows->whereYear('loans.loaned_date', '=', $request->input('yr'));
+            }
+            if( $request->input("mnt") != ""){
+              $borrows = $borrows->whereMonth('loans.loaned_date', '=', $request->input('mnt'));
+            }
+            $borrows = $borrows->select('loans.*')->get();
+            foreach ($borrows as $key => $value) {
+              $fetch[] = ['patron_id'=>$value->patron_id,'acc_num'=>$value->acc_num,'due_date'=>date('M-d-Y', strtotime($value->due_date)),'returned'=>date('M-d-Y', strtotime($value->returned_date)),'loaned'=>date('M-d-Y', strtotime($value->loaned_date))];
+            }
+            return json_encode($fetch);
         }
         
     }
     public function fetch_data_by_range(Request $request){
         $fetch = [];
         if($request->input('category') == 'lmu'){
-            $copy = Copies::whereBetween('created_at',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))])->get();
-            foreach ($copy as $key => $value) {
-                    $d_info  = self::fetchCopiesByCatalogueID($value->catalogue_id);
-                    $fetch[] = ['acc_num'=>$value->acc_num,'barcode'=>$value->barcode,'title'=>$d_info['title'],'totalLoan'=>count(Loans::where(['acc_num'=>$value->acc_num])->get())];
-            }
-            return json_encode($fetch);
+          $copy = Copies::whereBetween('created_at',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))])->get();
+          foreach ($copy as $key => $value) {
+            $d_info  = self::fetchCopiesByCatalogueID($value->catalogue_id);
+            $fetch[] = ['acc_num'=>$value->acc_num,'barcode'=>$value->barcode,'title'=>$d_info['title'],'totalLoan'=>count(Loans::where(['acc_num'=>$value->acc_num])->get())];
+          }
+          return json_encode($fetch);
         }else if ($request->input('category') == 'patron'){
-              $patron = Patrons::on()->with(['patron_information'])->whereBetween('created_at',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))])->get();
-              foreach ($patron as $key => $value) {
-                    foreach ($value->patron_information as $key => $value_info) {
-                        $fetch[] = ['id'=>$value_info->student_id, 'name'=>strtoupper($value_info->full_name), 'course'=>$value_info->course, 'visit'=>self::count_who_visit(1,$value_info->patron_id), 'borrow' => self::fetchBorrowCount($value_info->patron_id), 'fines' => self::patronTotalFines($value_info->patron_id)];
-                    }
-              }
-              return json_encode($fetch);
+          $patron = Patrons::on()->with(['patron_information'])->whereBetween('created_at',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))])->get();
+          foreach ($patron as $key => $value) {
+            foreach ($value->patron_information as $key => $value_info) {
+              $fetch[] = ['id'=>$value_info->student_id, 'name'=>strtoupper($value_info->full_name), 'course'=>$value_info->course, 'visit'=>self::count_who_visit(1,$value_info->patron_id), 'borrow' => self::fetchBorrowCount($value_info->patron_id), 'fines' => self::patronTotalFines($value_info->patron_id)];
+            }
+          }
+          return json_encode($fetch);
         }else if ($request->input('category') == 'fines'){
-              $patrons = Fines::whereBetween('created_at',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))])->get();
-              foreach ($patrons as $value) {
-                    foreach (Patrons::on()->with(['patron_information'])->where(['patron_id'=>$value->patron_id])->get() as $p_v) {
-                        $fetch[] = ['date'=> ''.date('F j, Y', strtotime($value->updated_at)),'patron'=>strtoupper($p_v['patron_information'][0]->full_name),'amount'=>$value->amount,'status'=>$value->status,'remarks'=>$value->remarks];
-                    }
-              }
-              return json_encode($fetch);
+          $patrons = Fines::whereBetween('created_at',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))])->get();
+          foreach ($patrons as $value) {
+            foreach (Patrons::on()->with(['patron_information'])->where(['patron_id'=>$value->patron_id])->get() as $p_v) {
+              $fetch[] = ['date'=> ''.date('F j, Y', strtotime($value->updated_at)),'patron'=>strtoupper($p_v['patron_information'][0]->full_name),'amount'=>$value->amount,'status'=>$value->status,'remarks'=>$value->remarks];
+            }
+          }
+          return json_encode($fetch);
         }
         else if ($request->input('category') == 'borrow'){
-              $borrows = Loans::whereBetween('created_at',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))])->get();
-              foreach ($borrows as $key => $value) {
-                $fetch[] = ['patron_id'=>$value->patron_id,'acc_num'=>$value->acc_num,'due_date'=>date('M-d-Y', strtotime($value->due_date)),'returned'=>date('M-d-Y', strtotime($value->returned_date)),'loaned'=>date('M-d-Y', strtotime($value->loaned_date))];
-              }
-              return json_encode($fetch);
+          $borrows = Loans::join('patron_information','patron_information.patron_id', '=','loans.patron_id')->whereBetween('loans.loaned_date',[date('Y-m-d H:i:s', strtotime($request->start)),date('Y-m-d H:i:s', strtotime($request->end))]);
+          if( $request->input('department') != ""){
+            $borrows = $borrows->where('patron_information.department','=',$request->input('department'));
+          }
+          $borrows = $borrows->get();
+          foreach ($borrows as $key => $value) {
+            $fetch[] = ['patron_id'=>$value->patron_id,'acc_num'=>$value->acc_num,'due_date'=>date('M-d-Y', strtotime($value->due_date)),'returned'=>date('M-d-Y', strtotime($value->returned_date)),'loaned'=>date('M-d-Y', strtotime($value->loaned_date))];
+          }
+          return json_encode($fetch);
         }
     }
     public function fetch(Request $request, $type)

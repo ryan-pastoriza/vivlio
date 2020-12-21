@@ -158,19 +158,34 @@ class OpacController extends Controller
         $search = FieldValue::where("value","REGEXP","_.[\s\S]*".$q."[\s\S]*")->groupBy('catalogue_id')->get(['catalogue_id']);
         $result = [];
         foreach( $search as $catalogue_id){
-            $catRec = CatalogueRecord::where('catalogue_id',$catalogue_id->catalogue_id)->get(['call_num','material_type_id'])->first();
-            $title = substr(explode('_',FieldValue::where('id',16)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value']))[1],1);
-            $edition = substr(explode('_',FieldValue::where('id',17)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
-            $isbn = substr(explode('_',FieldValue::where('id',14)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
-            $author = substr(explode('_',FieldValue::where('id',15)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value']))[1],1);
-            $datePub = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[3],1 );
-            $publisher = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[2],1 );
-            $physDesc = substr( explode('_',FieldValue::where('id',19)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1 );
-            $copiesNum = Copies::where('status','available')->where('catalogue_id', $catalogue_id->catalogue_id)->count();
-            $copiesTotal = Copies::where('catalogue_id', $catalogue_id->catalogue_id)->count();
-            $matType = LibMaterialType::where('material_type_id',$catRec->material_type_id)->get(['name'])->first();
-            $matType = sizeof($matType) >0 ? $matType->name:'N/A';
-
+            $catRec = CatalogueRecord::where('catalogue_id',$catalogue_id->catalogue_id)->get(['call_num','material_type_id','opac_info'])->first();
+            if($catRec->opac_info == ''){
+                $title = substr(explode('_',FieldValue::where('id',16)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value']))[1],1);
+                $edition = substr(explode('_',FieldValue::where('id',17)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
+                $isbn = substr(explode('_',FieldValue::where('id',14)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
+                $author = substr(explode('_',FieldValue::where('id',15)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value']))[1],1);
+                $datePub = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[3],1 );
+                $publisher = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[2],1 );
+                $physDesc = substr( explode('_',FieldValue::where('id',19)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1 );
+                $copiesNum = Copies::where('status','available')->where('catalogue_id', $catalogue_id->catalogue_id)->count();
+                $copiesTotal = Copies::where('catalogue_id', $catalogue_id->catalogue_id)->count();
+                $matType = LibMaterialType::where('material_type_id',$catRec->material_type_id)->get(['name'])->first();
+                $matType = sizeof($matType) >0 ? $matType->name:'N/A';
+                CatalogueRecord::where('catalogue_id',$catalogue_id->catalogue_id)->update(['opac_info'=>$title.'_-OPAC-_'.$edition.'_-OPAC-_'.$isbn.'_-OPAC-_'.$author.'_-OPAC-_'.$datePub.'_-OPAC-_'.$publisher.'_-OPAC-_'.$physDesc.'_-OPAC-_'.$copiesNum.'_-OPAC-_'.$copiesTotal.'_-OPAC-_'.$matType.'_-OPAC-_'.$matType]);
+                
+            }else{
+                $values = explode('_-OPAC-_', $catRec->opac_info);
+                $title = $values[0];
+                $edition = $values[1];
+                $isbn = $values[2];
+                $author = $values[3];
+                $datePub = $values[4];
+                $publisher = $values[5];
+                $physDesc = $values[6];
+                $copiesNum = $values[7];
+                $copiesTotal = $values[8];
+                $matType = $values[9];
+            }
             // $issn = substr(explode('_',FieldValue::where('id',14)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
             
             array_push($result,['title' => $title, 'call_num'=> $catRec->call_num, 'edition' => $edition, 'isbn' => $isbn, 'copies_available' => $copiesNum, 'copies_total' => $copiesTotal, 'catalogue_id' => $catalogue_id->catalogue_id, 'material_type'=>$matType,'date_publication' => $datePub, 'author'=>$author,'publisher'=>$publisher,'physDesc'=>$physDesc]);

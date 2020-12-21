@@ -47,6 +47,7 @@ Route::post('/rda/remove', 'cpanel\RDAController@destroy');
 // templatecontroller
 Route::post('/template/populate', 'cpanel\TemplateController@populate');
 Route::post('/template/add_to_template', 'cpanel\TemplateController@add_to_template');
+Route::post('/template/remove_template', 'cpanel\TemplateController@remove_template');
 Route::post('/template/fetch_tags', 'cpanel\TemplateController@fetch_tags');
 // Route::post('/rda/save_subtag', 'cpanel\RDAController@store');
 

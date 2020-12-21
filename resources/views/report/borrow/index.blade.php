@@ -44,14 +44,14 @@
 <div id="content" class="content">
 	<div class="col-md-12 panel panel-default">
 		<div class="panel-heading">
-			<div class="col-md-1">
+			<!-- <div class="col-md-1">
 				<small class="text-muted"><strong style="font-size:11px">Commands</strong></small>
 				<span class="text-muted" style="font-size:11px">Year <span class="date_ text-success">*.*</span></span>
-			</div>
+			</div> -->
 			<div class="col-md-2">
 				<small class="text-success">Year</small>
 				<select name="" id="select-year" class="form-control" required="required">
-					 <option>-select-</option>
+					 <option value="">-select-</option>
                      <?php for($x = 4; $x>0;$x--){?>
                        <option>{{(date('Y', strtotime(\Carbon\Carbon::now()))-4 + $x)}}</option>
                      <?php }?>
@@ -75,7 +75,7 @@
 					<option value="12">December</option>
 				</select>
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-4">
 				<small class="text-success">Date From and To</small>
 				<div class="col-md-12">
 					<div class="input-group input-daterange">
@@ -84,6 +84,18 @@
 						<input type="text" class="form-control date_range_input" id="date_range_end" name="end" placeholder="Date End" />
 					</div>
 				</div>
+			</div>
+			<div class="col-md-2">
+				<small class="text-success">Department</small>
+				<select name="" id="select-department" class="form-control" required="required">
+					 <option value="">-select-</option>
+					 <option value="CED">CED</option>
+					 <option value="BED">BED</option>
+					 <option value="SH">SH</option>
+                     <!-- <?php for($x = 4; $x>0;$x--){?>
+                       <option>{{(date('Y', strtotime(\Carbon\Carbon::now()))-4 + $x)}}</option>
+                     <?php }?> -->
+				</select>
 			</div>
 			<div class="col-md-2">
 				<small class="text-success">Other specification</small>
@@ -199,7 +211,16 @@
 			$(document).on('change','#select-year',function(e){
 				e.preventDefault();
 				var url = "{{url('report/fetch_data_by_date')}}";
-				var posting = $.post(url,{_token:"{{csrf_token()}}",yr:$(this).val(),mnt:"",category:"borrow"});
+				var posting = $.post(
+						url,
+						{
+							_token:"{{csrf_token()}}",
+							yr:$(this).val(),
+							mnt:$('#select-mnt').val(),
+							category:"borrow",
+							department:$('#select-department').val()
+						}
+					);
 					posting.done(function(data){
 						createDataTable($('table#borrow-table'),'Borrow Information','fetch_patron',JSON.parse(data));
 					});
@@ -207,16 +228,48 @@
 			$(document).on('change','#select-mnt',function(e){
 				e.preventDefault();
 				var url = "{{url('report/fetch_data_by_date')}}";
-				var posting = $.post(url,{_token:"{{csrf_token()}}",yr:$('#select-year').val(),mnt:$(this).val(),category:"borrow"});
+				var posting = $.post(
+						url,
+						{
+							_token:"{{csrf_token()}}",
+							yr:$('#select-year').val(),
+							mnt:$(this).val(),
+							category:"borrow",
+							department:$('#select-department').val()
+						}
+					);
 					posting.done(function(data){
 						createDataTable($('table#borrow-table'),'Borrow Information','fetch_patron',JSON.parse(data));
 					});
 			})
+			$(document).on('change','#select-department',function(e){
+				e.preventDefault();
+				if($('#select-year').val() == ''){
+					var url = "{{url('report/fetch_data_by_range')}}";
+				}else{
+					var url = "{{url('report/fetch_data_by_date')}}";
+				}
+				var posting = $.post( 
+						url,
+						{
+							_token:"{{csrf_token()}}",
+							yr:$('#select-year').val(),
+							mnt:$('#select-mnt').val(),
+							start:$('input[name=start]').val(),
+							end:$('input[name=end]').val(),
+							category:"borrow",
+							department:$(this).val()
+						} 
+					);
+					posting.done(function(data){
+						createDataTable($('table#borrow-table'),'Borrow Information','fetch_patron',JSON.parse(data));
+					});
+			});
 			$(document).on('blur','.date_range_input',function(e){
 				e.preventDefault();
 				if(($('input[name=start]').val()!= '')&& ($('input[name=end]').val()!= '')){
 					var url = "{{url('report/fetch_data_by_range')}}";
-					var data = {_token:"{{csrf_token()}}",start:$('input[name=start]').val(),end:$('input[name=end]').val(),category:'patron'};
+					var data = {_token:"{{csrf_token()}}",start:$('input[name=start]').val(),end:$('input[name=end]').val(),category:'borrow',department:$('#select-department').val() };
 					var posting = $.post(url,data);
 						posting.done(function(data){
 							createDataTable($('table#borrow-table'),'Borrow Information','fetch_patron',JSON.parse(data));

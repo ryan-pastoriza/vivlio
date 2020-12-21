@@ -44,7 +44,7 @@ class Copies extends Model
     }
     public function fetchCopiesByLast($days){
         $data = [];
-        foreach (self::on()->where( 'created_at', '>', $days)->get()->toArray() as $key => $value) {
+        foreach (self::on()->where( 'created_at', '>', $days)->limit(15)->get()->toArray() as $key => $value) {
            $data[] = ['copies'=>$value];
         }
         return $data;

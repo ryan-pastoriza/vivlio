@@ -77,8 +77,8 @@
 				<div class="">
 					<div class="col-md-12" style="padding:0;">
 						<h5><b>Library Information</b></h5>
-						<p style="color:#00acac"><b style="color:gray;">Library card no:</b> LBA123998727</p>
-						<p style="color:#00acac"><b style="color:gray;">Membership Exp:</b> November 12, 2017
+						<p style="color:#00acac"><b style="color:gray;">Library card no:</b> {{$value->card_number}}</p>
+						<p style="color:#00acac"><b style="color:gray;">Membership Exp:</b> {{$value->expiration}}
 
 						<p style="color:#00acac"><b style="color:gray;">SY:</b> 2016-2017
 						<p style="color:#00acac"><b style="color:gray;">Sem:</b> 2nd</p>

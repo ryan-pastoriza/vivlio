@@ -21,7 +21,7 @@ class CatalogueRecord extends Model
     protected $primaryKey = 'catalogue_id';
     public $timestamps = true;
     protected $fillable = [
-            'material_type_id', 'call_num', 'remarks', 'price',
+            'material_type_id', 'call_num', 'remarks', 'price','opac_info',
     ];
 
 
@@ -44,7 +44,8 @@ class CatalogueRecord extends Model
         // return $data_i;
         // $this->insert($data_i);
     	$this->material_type_id = (isset($data_i['material_type_id']))? $data_i['material_type_id'] : '';
-		$this->call_num = isset($data_i['call_num']) ? $data_i['call_num'] : '';
+        $this->opac_info = isset($data_i['opac_info']) ? $data_i['opac_info'] : '';
+        $this->call_num = isset($data_i['call_num']) ? $data_i['call_num'] : '';
 		$this->remarks = isset($data_i['remarks']) ? $data_i['remarks'] : '';
 		$this->price = isset($data_i['price']) ? $data_i['price'] : '';
 		$this->save();
