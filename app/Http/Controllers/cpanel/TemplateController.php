@@ -93,7 +93,7 @@ class TemplateController extends Controller
 			$ids[] = $value['id'];
 		}
 
-		$templates = $marc::whereIn('id', $ids)->get(['*'])->toArray();
+		$templates = $marc::whereIn('id', $ids)->orderBy('tagfield','asc')->get(['*'])->toArray();
 
 		foreach ($templates as $key => $value) {
 			
