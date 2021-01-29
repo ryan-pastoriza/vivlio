@@ -21,7 +21,7 @@ class CatalogueRecord extends Model
     protected $primaryKey = 'catalogue_id';
     public $timestamps = true;
     protected $fillable = [
-            'material_type_id', 'call_num', 'remarks', 'price','opac_info',
+            'material_type_id', 'call_num', 'remarks', 'price','opac_info','accession_info'
     ];
 
 

@@ -91,23 +91,27 @@ class TechnicalController extends Controller
     {
         //
     }
+
     public function acquisition()
     {
         $data = ['title'=> 'Vivlio | Acquisition', 'active' => 'technical', 'user_info' => $this->get_user_info()];
         
         return view('technical.acquisition.index', compact('data'));
     }
+
     public function catalogue()
     {
         $data = ['title'=> 'Vivlio | Catalogue', 'active' => 'technical', 'user_info' => $this->get_user_info()];
         return view('technical.catalogue.index', compact('data'));
     }
+
     public function indexing()
     {
         $data = ['title'=> 'Vivlio | Indexing', 'active' => 'technical', 'user_info' => $this->get_user_info()];
         
         return view('technical.indexing.index', compact('data'));
     }
+
     public function e_resource()
     {
 
@@ -117,10 +121,12 @@ class TechnicalController extends Controller
         
         return view('technical.e_resource.index', compact('data'));
     }
+
     public function fetchResources(Request $request){
         $e = new E_resources;
         return json_encode($e->fetchResources());
     }
+
     public function saveResources(Request $request){
         if($request->hasFile('res_upload_file')){
             if($request->file('res_upload_file')->isValid()){
@@ -140,6 +146,7 @@ class TechnicalController extends Controller
             }
         }
     }
+    
     public function downloadFile(Request $request){ 
         $dir = base_path()."/public/uploads/e_resources/".$request->input('res_id')."/";
         /* var_export($dir); */
@@ -148,4 +155,5 @@ class TechnicalController extends Controller
             return response()->download($file);
         }
     }
+
 }

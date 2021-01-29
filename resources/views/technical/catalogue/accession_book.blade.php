@@ -1,3 +1,12 @@
+<?php
+
+function single_out($field, $index) {
+		
+	$str = explode('_', $field);
+	echo substr($str[$index], 1, strlen($str[$index]));
+		
+}
+?>
 
 <style type="text/css">
 		
@@ -66,36 +75,23 @@
 								</tr>
 						</thead>
 						<tbody>
-<?php
+							<!-- <?php var_dump($records);?> -->
+							<?php foreach ($records as $key => $record): ?>
+								<tr id="<?php echo $key; ?>">
+									<td><?php echo $record[0][0]; ?></td> {{-- ISBN --}}
+									<td><?php echo $record[0][1]; ?></td> {{-- CALL NUMBER --}}
+									<td><?php echo $record[0][2]; ?></td> {{-- Author --}}
+									<td><?php echo $record[0][3]; ?></td> {{-- Title --}}
+									<td><?php echo $record[0][4]; ?></td> {{-- Edition --}}
+									<td><?php echo $record[0][5]; ?></td> {{-- Volume --}}
+									<td><?php echo $record[0][6]; ?></td> {{-- Pages --}}
+									<td><?php echo $record[0][7]; ?></td> {{-- Price --}}
+									<td><?php echo $record[0][8]; ?></td> {{-- Copies --}}
+									<td><?php echo $record[0][9]; ?></td> {{-- Publishing House --}}
+									<td><?php echo $record[0][10]; ?></td> {{-- Copyright Year --}}
+								</tr>
+							<?php endforeach; ?>
 
-function single_out($field, $index) {
-		
-	$str = explode('_', $field);
-	echo substr($str[$index], 1, strlen($str[$index]));
-		
-}
-
-foreach ($records as $key => $value): ?>
-	<tr id="<?php echo $value['catalogue_id']; ?>">
-		<td><?php single_out(isset($value[0][0]->value) ? $value[0][0]->value : '_____', 1); ?></td>  {{-- ISBN --}}
-		<td> <?php echo $value['call_num']; ?></td>
-		<td><?php single_out(isset($value[0][1]->value) ? $value[0][1]->value : '_____', 1); ?></td> {{-- Author --}}
-		<td><?php single_out(isset($value[0][2]->value) ? $value[0][2]->value : '_____', 1); ?></td> {{-- Title --}}
-		<td><?php single_out(isset($value[0][3]->value) ? $value[0][3]->value : '_____', 1); ?></td> {{-- Edition --}}
-		<td><?php single_out(isset($value[0][6]->value) ? $value[0][6]->value : '_____', 2); ?></td> {{-- Volume --}}
-		<td><?php single_out(isset($value[0][5]->value) ? $value[0][5]->value : '_____', 1); ?></td> {{-- Pages --}}
-		<td><?php echo $value['price'] ?></td>                                                  {{-- Price --}}
-		<td><?php echo $value['copies'] ?></td>                                                 {{-- Copies --}}
-		<td><?php single_out(isset($value[0][4]->value) ? $value[0][4]->value : '_____', 2); ?></td> {{-- Publishing House --}}
-		<td><?php single_out(isset($value[0][4]->value) ? $value[0][4]->value : '_____', 3); ?></td> {{-- Copyright Year --}}
-		<!-- <td>  -->
-						<?php 
-								// echo substr($value['remarks'], 0, 30).(strlen(substr($value['remarks'], 0, 30)) > 29 ? '.. .' : ''); 
-						?> 
-				<!-- </td> -->
-	</tr>
-		
-<?php endforeach; ?>
 
 						</tbody>
 				</table>

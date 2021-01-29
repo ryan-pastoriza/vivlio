@@ -101,6 +101,7 @@ class CatalogController extends Controller
         /* -------------------------- */
         // return $catalogue_id;
     }
+
     public function add_copy(Request $request){
 
         $copy = new Copies();
@@ -139,8 +140,10 @@ class CatalogController extends Controller
         
     }
     public function delete_copy(Request $request){
+
         return Copies::where('copy_id',$request->input('id'))->delete();
     }
+
     public function get_copies(Request $request){
 
         $catalogue_id = $request->input('catalogue_id');
@@ -155,6 +158,7 @@ class CatalogController extends Controller
         // var_dump($catRec);
         return $copies;
     }
+
     public function populate(){
         /* -------------------------- */
         $records = DB::table('catalogue_record')
@@ -225,8 +229,13 @@ class CatalogController extends Controller
         // echo $res;
         // echo $request->catalogue_id;
         // return $res;
+    }
 
-
+    function single_out($field, $index) {
+            
+        $str = explode('_', $field);
+        echo substr($str[$index], 1, strlen($str[$index]));
+            
     }
 
     public function accession_book(){
@@ -234,7 +243,7 @@ class CatalogController extends Controller
       	ini_set('max_execution_time',9999999);
         $fv           = new FieldValue();
         $cr           = new CatalogueRecord();
-        $ids          = CatalogueRecord::orderBy('catalogue_id', 'ASC')->limit(50)->pluck('catalogue_id')->toArray();
+        $catr          = CatalogueRecord::orderBy('catalogue_id', 'ASC')->get(['catalogue_id','accession_info'])->toArray();
         $copies       = new Copies();
 
 
@@ -262,14 +271,61 @@ class CatalogController extends Controller
         //                 ->toArray()
         //             );
 
-        foreach ($ids as $id) {
-            
-            $records[$id] = $cr->get_record_by_id($id);
-            $records[$id]['copies'] = $copies::where('catalogue_id', $id)->get()->count();
-            $records[$id][] = $fv->accession_by_id($id);
+                
+        foreach ($catr as $cat) {
+            $id = $cat['catalogue_id'];
+            $accInfo = $cat['accession_info'];
+            if($accInfo != null){
+            // //     <td>ISBN</td>
+            // //     <td>Call Number</td>
+            // //     <td>Author</td>
+            // //     <td>Title</td>
+            // //     <td>Edition</td>
+            // //     <td>Volume</td>
+            // //     <td>Pages</td>
+            // //     <td>Price</td>
+            // //     <td>Copies</td>
+            // //     <td>Publishing House</td>
+            // //     <td>Copyright Year</td>  
+                // return explode('_-ACCINFO-_',$accInfo);
+                $records[$id][] = explode('_-ACCINFO-_',$accInfo);
+
+            }else{
+                // $records[$id] = $cr->get_record_by_id($id);
+                // $records[$id]['copies'] = $copies::where('catalogue_id', $id)->get()->count();
+                // $records[$id][] = $fv->accession_by_id($id);
+
+                // return $record;
+                // $records[$id][] = $fv->accession_by_id($id);
+                // return $records;
+
+                $record = $cr->get_record_by_id($id);
+                $isbnIssn           = substr( explode('_',FieldValue::where('id',14)->where('catalogue_id',$id)->get(['value'])->first()->value)[1], 1);
+                $callNum            = $record['call_num'];
+                $author             = substr( explode('_',FieldValue::where('id',15)->where('catalogue_id',$id)->get(['value']))[1], 1);
+                $title              = substr( explode('_', FieldValue::where('id',16)->where('catalogue_id',$id)->get(['value']) )[1], 1);
+                $edition            = substr( explode('_',FieldValue::where('id',17)->where('catalogue_id',$id)->get(['value'])->first()->value)[1], 1);
+                $volume             = substr( explode('_',FieldValue::whereIn('id',[29,20])->where('catalogue_id',$id)->get(['value'])->first()->value)[2], 1);
+                $pages              = substr( explode('_',FieldValue::where('id',19)->where('catalogue_id',$id)->get(['value'])->first()->value)[1], 1);
+                $price              = $record['price'];
+                $copyAmt            = $copies::where('catalogue_id', $id)->get()->count();
+                $publishingHouse    = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$id)->get(['value'])->first()->value)[2], 1);
+                $copyYear           = substr( explode('_',FieldValue::where('id',18)->where('catalogue_id',$id)->get(['value'])->first()->value)[3], 1);
+
+                CatalogueRecord::
+                where('catalogue_id',$id)
+                    ->update([
+                        'accession_info' => $isbnIssn.'_-ACCINFO-_'.$callNum.'_-ACCINFO-_'.$author.'_-ACCINFO-_'.$title.'_-ACCINFO-_'.$edition.'_-ACCINFO-_'.$volume.'_-ACCINFO-_'.$pages.'_-ACCINFO-_'.$price.'_-ACCINFO-_'.$copyAmt.'_-ACCINFO-_'.$publishingHouse.'_-ACCINFO-_'.$copyYear
+                        ]);
+
+                $records[$id][] = [$isbnIssn,$callNum,$author,$title,$edition,$volume,$pages,$price,$copyAmt,$publishingHouse,$copyYear];
+                // return $id;
+                // return $records;
+
+            }
 
         }
-
+        // var_dump($records);
         // return $records;
         // $array        = array('call_number', 'author', 'title', 'edition', 'volume');
         // $records = array();
@@ -291,7 +347,6 @@ class CatalogController extends Controller
         // dd($records);
 
         return view('technical.catalogue.accession_book', compact(['records']));
-
     }
 
     public function view_catalog_record(Request $request){
@@ -316,6 +371,7 @@ class CatalogController extends Controller
         // $data = [$catalogue_record, $array];
         return view('technical.catalogue.view_catalog', compact('data'));
     }
+
     private function get_record($id){
 
         # basic cataloging
@@ -358,6 +414,7 @@ class CatalogController extends Controller
         }
         return $records;
     }
+
     public function get_record_by_isbn(Request $request){
         $return = [];
 
@@ -512,7 +569,6 @@ class CatalogController extends Controller
         }
         $toRet += $catalogue_record->editById($catalogue_id, $array = $request->input('form'));
         return $toRet;
-
     }
 
     public function getQuickEditInfo(Request $request){
@@ -557,6 +613,9 @@ class CatalogController extends Controller
             // echo $fv;
         }
         return 'success';
+    }
+
+    public function searchCatalogue(Request $request){
 
     }
 
