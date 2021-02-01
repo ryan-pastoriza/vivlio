@@ -115,12 +115,15 @@ class RDAController extends Controller
                     $obj = marc_tag_structure::findOrFail($request->input('id'));
                     break;
                 case 'marc_subfield_structure':
+                    $obj = marc_subfield_structure::findOrFail($request->input('id'));
                     // $obj = new marc_subfield_structure();
                     break;
             }
         }
 
         $input = $request->all();
+        unset($input['id']);
+        // var_dump( $input );
         $obj->fill($input)->save();
 
         return $obj;
@@ -146,10 +149,11 @@ class RDAController extends Controller
            
         }else{
             $obj = new marc_subfield_structure;
-            if($obj->remove($request->input('id'))){
-                exit("1");
-            }else{
-                exit("0");
+            try {
+                $obj->remove($request->input('id'));
+                return 'true';
+            } catch (Exception $e) {
+                var_export($e->errorInfo[2]);
             }
         }
     }

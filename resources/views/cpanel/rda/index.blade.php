@@ -194,33 +194,33 @@
 				<h4 class="modal-title">Add Subfield</h4>
 			</div>
 			<div class="modal-body">
-				<form id="frm-rda-subfield-add">
+				<form id="frm-rda-subfield-edit">
                     <fieldset>
                         <div class="col-sm-12">
-                            <input type = "hidden" name = "_token" value = "<?php echo csrf_token(); ?>">
-                            <input type = "hidden" name = "_type" value = "marc_subfield_structure">
-                            <input type = "hidden" name="id" id="input-rda-tag-id">
+                            <input type = "hidden" name="_token" value = "<?php echo csrf_token(); ?>">
+                            <input type = "hidden" name="_type" value = "marc_subfield_structure">
+                            <input type = "hidden" name="id" id="edittagsubfieldid">
                             <h4 class="m-t-10">Add Subfield</h4>
                         </div>
                         
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="">Subfield Code</label>
-                                <input autocomplete="false" type="text" name="tagsubfield" id="tagsubfield" class="form-control" required="">
+                                <input autocomplete="false" type="text" name="tagsubfield" id="edittagsubfield" class="form-control" required="">
                             </div>
                         </div>
                         
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="">Subfield Name</label>
-                                <input autocomplete="false" type="text" name="tagsubfieldname" id="tagsubfieldname" class="form-control" required="" >
+                                <input autocomplete="false" type="text" name="tagsubfieldname" id="edittagsubfieldname" class="form-control" required="" >
                             </div>
                         </div>
                         
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="">Repeatable</label>
-                                <select class="form-control" name="repeatable" id="repeatable" required="">
+                                <select class="form-control" name="repeatable" id="edittagsubfieldrepeatable" required="">
                                     <option value="r" selected="">Repeatable</option>
                                     <option value="nr">Non Repeatable</option>
                                     <option value="none">None</option>
@@ -419,6 +419,40 @@
 					
 				});
 		});
+		// remove Subfield
+		$(document).on('click', '.subfield-modal-remove', function(e){
+			e.preventDefault();
+			
+			var id = this.id;
+			var url = "{{url('/rda/remove')}}";
+			var data = { id: id, type: 'sub_field', _token: "{{csrf_token()}}" };
+			
+			var posting = $.post(url, data);
+				posting.done(function(data){
+					console.log(data);
+					if( typeof data == 'string' && data == 'true'){
+
+						$.gritter.add({
+							title:"<i class='fa fa-remove text-danger'></i> Tag Removed!",
+							text:"",
+							sticky:false,
+							time:""
+						});
+
+						table.ajax.reload();
+						return false;
+					}
+
+					$.gritter.add({
+							title:"<i class='fa fa-warning text-danger'></i> Unable to remove tag!",
+							text: data,
+							sticky:false,
+							time:""
+						});
+					
+					
+				});
+		});
 		// update tags
 	    $(document).on('submit', '#frm-rda-tags-update', function(e){
 	    	e.preventDefault();
@@ -555,33 +589,63 @@
 
 			return false;		
 		});
+
+
 		$(document).on('click', '.subfield-modal-edit', function(e){
 			e.preventDefault();
 
 			var id = this.id;
-			// var rowData;
-			console.log($(this).closest('tr'));
-			// table.rows(function(idx, data, node){
+			var rowData = $(this).closest('tr')[0].cells;
+			// childTable.rows(function(idx, data, node){
+			// 	// console.log(data)
+			// 	// console.log(idx)
+			// 	// console.log(node)
 			// 	if( data.id == id ){
 			// 		rowData = data;
 			// 		return;
 			// 	}
 			// });
 			
-			// console.log(childTable);
-			// $(document).on('show.bs.modal', '#subfield-modal-edit', function (event) {
+			console.log(rowData[0].innerHTML);
+			$(document).on('show.bs.modal', '#subfield-modal-edit', function (event) {
 
-			//   	var modal = $(this);
-			 //  	modal.find('.modal-title').html(' <i class="fa fa-pencil"></i> [Edit] ' + rowData.tagfield + ' ' + rowData.tagname);
-			 //  	modal.find('#input-rda-tag-id').val(id);
-			 //  	modal.find('#tag').val(rowData.tagfield);
-				// modal.find('#tag_name').val(rowData.tagname);
-				// modal.find('#tag_repeatable').val(rowData.repeatable.toLowerCase());
-			// });
+			  	var modal = $(this);
+			  	modal.find('.modal-title').html(' <i class="fa fa-pencil"></i> [Edit] ' + rowData[0].innerHTML + ' : ' + rowData[1].innerHTML);
+			  	modal.find('#edittagsubfieldid').val(id);
+			  	modal.find('#edittagsubfield').val(rowData[0].innerHTML);
+				modal.find('#edittagsubfieldname').val(rowData[1].innerHTML);
+				modal.find('#edittagsubfieldrepeatable').val(rowData[2].innerHTML.toLowerCase());
+			});
 			
-			// $('#tag-modal-edit').modal('show');
+			$('#subfield-modal-edit').modal('show');
 			
 		});
+
+	    $(document).on('submit', '#frm-rda-subfield-edit', function(e){
+	    	e.preventDefault();
+
+	    	var form = $(this);
+
+	    	$.ajax({
+	    		url 	: "{{url('/rda/update')}}",
+	    		type 	: 'POST',
+	    		data 	: form.serialize(),
+	    		success : function(data){
+
+	    			$('#tag-modal-edit').modal('hide')
+	    			// add notification
+					$.gritter.add({
+						title:"<i class='fa fa-check text-success'></i> Tag Updated!",
+						text:"",
+						sticky:false,
+						time:""
+					});
+					// reload table
+	    			table.ajax.reload();
+	    		},
+	    	});
+	    });
+
 	});
 
     /* Formatting function for row details - modify as you need */
