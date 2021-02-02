@@ -153,46 +153,41 @@ class OpacController extends Controller
         return $reserve;
     }
     public function loadSearches(Request $request){
+        $cr = New CatalogueRecord;
         ini_set('max_execution_time',9999999);
         $start = microtime(true);
         $q = $request->input('q');
         $search = FieldValue::where("value","REGEXP","_.[\s\S]*".$q."[\s\S]*")->groupBy('catalogue_id')->get(['catalogue_id']);
         $result = [];
         foreach( $search as $catalogue_id){
-            $catRec = CatalogueRecord::where('catalogue_id',$catalogue_id->catalogue_id)->get(['call_num','material_type_id','opac_info'])->first();
-            if($catRec->opac_info == ''){
-                $title = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'245','a');
-                $edition = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'250','a');
-                $isbnIssn           = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'020','a');
-                if($isbnIssn == null){
-                    $isbnIssn       = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'022','a');
-                }
-                $author = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'100','a');
-                $datePub = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'264','c');
-                $publisher = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'264','b');
-                $physDesc = $this->getValuebyCatIDTagFieldandCode($catalogue_id->catalogue_id,'300','a');
-                $copiesNum = Copies::where('status','available')->where('catalogue_id', $catalogue_id->catalogue_id)->count();
-                $copiesTotal = Copies::where('catalogue_id', $catalogue_id->catalogue_id)->count();
-                $matType = LibMaterialType::where('material_type_id',$catRec->material_type_id)->get(['name'])->first();
-                $matType = sizeof($matType) >0 ? $matType->name:'N/A';
-                CatalogueRecord::where('catalogue_id',$catalogue_id->catalogue_id)->update(['opac_info'=>$title.'_-OPAC-_'.$edition.'_-OPAC-_'.$isbnIssn.'_-OPAC-_'.$author.'_-OPAC-_'.$datePub.'_-OPAC-_'.$publisher.'_-OPAC-_'.$physDesc.'_-OPAC-_'.$copiesNum.'_-OPAC-_'.$copiesTotal.'_-OPAC-_'.$matType.'_-OPAC-_'.$matType]);
-                
-            }else{
-                $values = explode('_-OPAC-_', $catRec->opac_info);
-                $title = $values[0];
-                $edition = $values[1];
-                $isbnIssn = $values[2];
-                $author = $values[3];
-                $datePub = $values[4];
-                $publisher = $values[5];
-                $physDesc = $values[6];
-                $copiesNum = $values[7];
-                $copiesTotal = $values[8];
-                $matType = $values[9];
-            }
-            // $issn = substr(explode('_',FieldValue::where('id',14)->where('catalogue_id',$catalogue_id->catalogue_id)->get(['value'])->first()->value)[1],1);
+            $values = $cr->getOPAC($catalogue_id->catalogue_id);
+            $title = $values[0];
+            $call_num = $values[1];
+            $edition = $values[2];
+            $isbnIssn = $values[3];
+            $author = $values[4];
+            $datePub = $values[5];
+            $publisher = $values[6];
+            $physDesc = $values[7];
+            $copiesNum = $values[8];
+            $copiesTotal = $values[9];
+            $catId = $values[10];
+            $matType = $values[11];
             
-            array_push($result,['title' => $title, 'call_num'=> $catRec->call_num, 'edition' => $edition, 'isbn' => $isbnIssn, 'copies_available' => $copiesNum, 'copies_total' => $copiesTotal, 'catalogue_id' => $catalogue_id->catalogue_id, 'material_type'=>$matType,'date_publication' => $datePub, 'author'=>$author,'publisher'=>$publisher,'physDesc'=>$physDesc]);
+            array_push($result,[
+                'title' => $title, 
+                'call_num'=> $call_num, 
+                'edition' => $edition, 
+                'isbn' => $isbnIssn, 
+                'copies_available' => $copiesNum, 
+                'copies_total' => $copiesTotal, 
+                'catalogue_id' => $catId, 
+                'material_type'=>$matType,
+                'date_publication' => $datePub, 
+                'author'=>$author,
+                'publisher'=>$publisher,
+                'physDesc'=>$physDesc
+            ]);
         }
         $end =  microtime(true);
 
@@ -200,20 +195,5 @@ class OpacController extends Controller
         // var_dump($request->session()->get('studentSession'));
         $data = ['is_login' => $request->session()->has('studentSession'), 'studentSession' => $request->session()->get('studentSession'), 'results' => $result, 'q' => $q, 'time_taken' => $time_taken ];
         return view('opac.searchResult', compact('data'));
-    }
-
-    private function getValuebyCatIDTagFieldandCode($catID,$tagfield,$subField){
-        $tagFieldID = marc_tag_structure::where('tagfield',$tagfield)->select(['id'])->first()['id'];
-        $fv = array_slice(explode('_',FieldValue::where(['id'=>$tagFieldID,'catalogue_id'=>$catID])->first()['value']),1);
-        foreach ($fv as $value) {
-            if($subField==$value[0]){
-                if( strlen($value)>1 ){
-                    return substr($value, 1);
-                }else{
-                    return null;
-                }
-            }
-        }
-        return null;
     }
 }

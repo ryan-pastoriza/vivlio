@@ -121,6 +121,7 @@ Route::post('technical/update_marc_record', 'technical\CatalogController@update_
 Route::post('technical/get_record_by_isbn', 'technical\CatalogController@get_record_by_isbn');
 Route::post('technical/getQuickEditInfo', 'technical\CatalogController@getQuickEditInfo');
 Route::post('technical/editQuick', 'technical\CatalogController@editQuick');
+Route::post('technical/search_catalogue', 'technical\CatalogController@searchCatalogue');
 
 /* end pages cataloging */
 

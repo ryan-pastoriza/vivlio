@@ -246,112 +246,13 @@ class CatalogController extends Controller
 		$catr          = CatalogueRecord::orderBy('catalogue_id', 'ASC')->get(['catalogue_id','accession_info'])->toArray();
 		$copies       = new Copies();
 
-
 		$records = array();
-
-		// call_number         catalogue_record     ['call_num']
-		// author              fv                   [''] tag100 A
-		// title               fv                   [''] tag245 A
-		// edition             fv                   [''] tag250 A
-		// volume              fv                   [''] tag440 V
-		// pages               fv                   [''] tag300 A
-		// price               catalogue_record     ['price']
-		// copies              Copies               count(['copy_id'])
-		// publishinghouse     fv                   [''] tag264 B
-		// copyright year      fv                   [''] tag264 C
-		// isbn                fv                   [''] tag020 A
-
-
-		// return( CatalogueRecord::join('copies','copies.catalogue_id','=','catalogue_record.catalogue_id')
-		//                 ->join('field_value','copies.catalogue_id','=','catalogue_record.catalogue_id')
-		//                 ->groupBy('copies.catalogue_id')
-		//                 ->select('*')
-		//                 ->limit(10)
-		//                 ->get()
-		//                 ->toArray()
-		//             );
-
 				
 		foreach ($catr as $cat) {
 			$id = $cat['catalogue_id'];
 			$accInfo = $cat['accession_info'];
-			if($accInfo != null){
-			// //     <td>ISBN</td>
-			// //     <td>Call Number</td>
-			// //     <td>Author</td>
-			// //     <td>Title</td>
-			// //     <td>Edition</td>
-			// //     <td>Volume</td>
-			// //     <td>Pages</td>
-			// //     <td>Price</td>
-			// //     <td>Copies</td>
-			// //     <td>Publishing House</td>
-			// //     <td>Copyright Year</td>  
-				// return explode('_-ACCINFO-_',$accInfo);
-				$records[$id][] = explode('_-ACCINFO-_',$accInfo);
-
-			}else{
-				// $records[$id] = $cr->get_record_by_id($id);
-				// $records[$id]['copies'] = $copies::where('catalogue_id', $id)->get()->count();
-				// $records[$id][] = $fv->accession_by_id($id);
-
-				// return $record;
-				// $records[$id][] = $fv->accession_by_id($id);
-				// return $records;
-
-				$record = $cr->get_record_by_id($id);
-
-				$isbnIssn			= $this->getValuebyCatIDTagFieldandCode($id,'020','a');
-				if($isbnIssn == null){
-					$isbnIssn		= $this->getValuebyCatIDTagFieldandCode($id,'022','a');
-				}
-				$callNum			= $record['call_num'];
-				$author				= $this->getValuebyCatIDTagFieldandCode($id,'100','a');
-				$title				= $this->getValuebyCatIDTagFieldandCode($id,'245','a');
-				$edition			= $this->getValuebyCatIDTagFieldandCode($id,'250','a');
-				$volume				= $this->getValuebyCatIDTagFieldandCode($id,'490','v');
-				if($volume == null){
-					$volume 		= $this->getValuebyCatIDTagFieldandCode($id,'440','v');
-				}
-				$pages				= $this->getValuebyCatIDTagFieldandCode($id,'300','a');
-				$price				= $record['price'];
-				$copyAmt			= $copies::where('catalogue_id', $id)->get()->count();
-				$publishingHouse	= $this->getValuebyCatIDTagFieldandCode($id,'264','b');
-				$copyYear			= $this->getValuebyCatIDTagFieldandCode($id,'264','c');
-
-				CatalogueRecord::
-				where('catalogue_id',$id)
-					->update([
-						'accession_info' => $isbnIssn.'_-ACCINFO-_'.$callNum.'_-ACCINFO-_'.$author.'_-ACCINFO-_'.$title.'_-ACCINFO-_'.$edition.'_-ACCINFO-_'.$volume.'_-ACCINFO-_'.$pages.'_-ACCINFO-_'.$price.'_-ACCINFO-_'.$copyAmt.'_-ACCINFO-_'.$publishingHouse.'_-ACCINFO-_'.$copyYear
-						]);
-
-				$records[$id][] = [$isbnIssn,$callNum,$author,$title,$edition,$volume,$pages,$price,$copyAmt,$publishingHouse,$copyYear];
-				// return $id;
-				// return $records;
-
-			}
-
+			$records[$id][] = $cr->getAccession($id);
 		}
-		// var_dump($records);
-		// return $records;
-		// $array        = array('call_number', 'author', 'title', 'edition', 'volume');
-		// $records = array();
-		
-		// if( count($ids) ) {
-			
-		//     foreach ($ids as $id) {
-				
-				// $records[$id] = $fv->accession_by_id($id);
-				// echo '<pre>';
-				// var_export($fv->accessionByCatalogueId($id));
-				// echo '</pre>';
-				// break;
-		//     }
-		// }
-		// $records            = $fv->accession();
-		
-		// return response()->json(['data' => $records]);
-		// dd($records);
 
 		return view('technical.catalogue.accession_book', compact(['records']));
 	}
@@ -623,7 +524,33 @@ class CatalogController extends Controller
 	}
 
 	public function searchCatalogue(Request $request){
-
+		if(!$request->input('search_key')){
+			return json_encode([
+				"draw" => 1,
+		    	"recordsTotal" => 0,
+		    	"recordsFiltered" => 0,
+		    	'data'=>[]]);
+		}
+		switch ($request->input('filter')) {
+			case 'Accession Number':
+				$cr = New CatalogueRecord;
+				$total = Copies::distinct('catalogue_id')->count('catalogue_id');
+				$catID = Copies::select('catalogue_id')->where('acc_num','=',$request->input('search_key'))->get()->toArray();
+				$data = [
+				"draw"=> 1,
+		    	"recordsTotal"=> $total,
+		    	'data'=>[]];
+				foreach ($catID as $rec) {
+					array_push($data['data'], $cr->getAccession($rec['catalogue_id']) );
+				}
+				$data["recordsFiltered"] = count($data['data']);
+				return json_encode($data);
+				break;
+			
+			default:
+				return null;
+				break;
+		};
 	}
 
 	private function getValuebyCatIDTagFieldandCode($catID,$tagfield,$subField){

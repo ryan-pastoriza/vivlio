@@ -409,7 +409,7 @@ $(document).ready(function(){
 			// "bPaginate": false,
 			"bLengthChange": false,
 			"bFilter": true,
-			"bInfo": false,
+			"bInfo": true,
 			"bAutoWidth": false,
 			"pageLength": 100
 	});
