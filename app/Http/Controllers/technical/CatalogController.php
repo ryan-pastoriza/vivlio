@@ -134,13 +134,14 @@ class CatalogController extends Controller
 			if ( $copy->save() ){
 				return 1;
 			}
+			CatalogueRecord::where('catalogue_id',$request->input('catalogue_id'))->update(['up_acc'=>1,'up_opac'=>1]);
 
 		}
 		return 0;
 		
 	}
 	public function delete_copy(Request $request){
-
+		CatalogueRecord::where('catalogue_id',Copies::where('copy_id',$request->input('id'))->first()['catalogue_id'])->update(['up_acc'=>1,'up_opac'=>1]);
 		return Copies::where('copy_id',$request->input('id'))->delete();
 	}
 
@@ -461,7 +462,7 @@ class CatalogController extends Controller
 			$fv_id = $records[0];
 			$catalogue_id = $fieldObj->get_catalogue_id($fv_id)[0]['catalogue_id'];
 			// return $catalogue_id;
-
+			CatalogueRecord::where('catalogue_id',$catalogue_id)->update(['up_acc'=>1,'up_opac'=>1]);
 			// $subfield = substr($records[count($records) - 1], 0, 1);
 			// $subfieldValue = substr($records[count($records) - 1], 1, strlen($records[count($records) - 1]));
 			if( array_key_exists($fv_id, $arr) ){
@@ -503,7 +504,7 @@ class CatalogController extends Controller
 			'remarks'=>$request->input('remarks')]
 		);
 		// echo $cr;
-
+		CatalogueRecord::where('catalogue_id',$catID)->update(['up_acc'=>1,'up_opac'=>1]);
 		foreach ($values as $key => $value) {
 			$fvs = FieldValue::where('catalogue_id',$catID)
 			->where('id', $key)->first();
@@ -529,7 +530,8 @@ class CatalogController extends Controller
 				"draw" => 1,
 		    	"recordsTotal" => 0,
 		    	"recordsFiltered" => 0,
-		    	'data'=>[]]);
+		    	'data'=>[]
+		    ]);
 		}
 		switch ($request->input('filter')) {
 			case 'Accession Number':
