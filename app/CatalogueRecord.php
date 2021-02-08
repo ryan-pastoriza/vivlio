@@ -125,7 +125,7 @@ class CatalogueRecord extends Model
 			where('catalogue_id',$catalogue_id)
 			->update([
 				'opac_info' 	=> $title.'_-OPAC-_'.$call_num.'_-OPAC-_'.$edition.'_-OPAC-_'.$isbnIssn.'_-OPAC-_'.$author.'_-OPAC-_'.$datePub.'_-OPAC-_'.$publisher.'_-OPAC-_'.$physDesc.'_-OPAC-_'.$copiesNum.'_-OPAC-_'.$copiesTotal.'_-OPAC-_'.$catalogue_id.'_-OPAC-_'.$matType.'_-OPAC-_'.$matType,
-				'up_opac' 		=> 0
+				'up_opac' 		=> 1
 			]);
 			return [$title,$call_num,$edition,$isbnIssn,$author,$datePub,$publisher,$physDesc,$copiesNum,$copiesTotal,$catalogue_id,$matType,$matType];
 			
@@ -163,7 +163,7 @@ class CatalogueRecord extends Model
 			where('catalogue_id',$id)
 				->update([
 					'accession_info' 	=> $isbnIssn.'_-ACCINFO-_'.$callNum.'_-ACCINFO-_'.$author.'_-ACCINFO-_'.$title.'_-ACCINFO-_'.$edition.'_-ACCINFO-_'.$volume.'_-ACCINFO-_'.$pages.'_-ACCINFO-_'.$price.'_-ACCINFO-_'.$copyAmt.'_-ACCINFO-_'.$publishingHouse.'_-ACCINFO-_'.$copyYear,
-					'up_acc' 		=> 0
+					'up_acc' 		=> 1
 				]);
 
 			return [$isbnIssn,$callNum,$author,$title,$edition,$volume,$pages,$price,$copyAmt,$publishingHouse,$copyYear];
