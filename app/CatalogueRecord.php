@@ -104,7 +104,7 @@ class CatalogueRecord extends Model
 	public function getOPAC($catalogue_id){
 		$cat_rec = CatalogueRecord::where('catalogue_id',$catalogue_id)->get(['call_num','material_type_id','opac_info','up_opac'])->first();
 		$opac = $cat_rec->opac_info;
-		if($cat_rec->up_opac){
+		if(!$cat_rec->up_opac){
 			$title 				= $this->getValuebyCatIDTagFieldandCode($catalogue_id,'245','a');
 			$call_num			= $cat_rec->call_num;
 			$edition 			= $this->getValuebyCatIDTagFieldandCode($catalogue_id,'250','a');
@@ -138,7 +138,7 @@ class CatalogueRecord extends Model
 		$copies       = new Copies();
 		$cat_rec = CatalogueRecord::where('catalogue_id',$catalogue_id)->get(['call_num','material_type_id','accession_info','up_acc'])->first();
 		$id = $catalogue_id;
-		if($cat_rec->up_acc){
+		if(!$cat_rec->up_acc){
 			$record = $this->get_record_by_id($id);
 
 			$isbnIssn			= $this->getValuebyCatIDTagFieldandCode($id,'020','a');
