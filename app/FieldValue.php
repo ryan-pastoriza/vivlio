@@ -41,7 +41,7 @@ class FieldValue extends Model
     public function get_isbn($id, $isbn){
         
         // $return = $this->where('value', 'LIKE', "%$isbn%")->get()->toArray();
-        $return = $this->where('id', $id)->where('lower(value)', 'LIKE', "%_a$isbn"."%")->get()->toArray();
+        $return = $this->where('id', $id)->whereRaw('LOWER(value) LIKE ?', ["%_a$isbn"."%"])->get()->toArray();
 
         if( count($return) ){
             return $return;

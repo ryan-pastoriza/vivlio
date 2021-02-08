@@ -359,9 +359,10 @@ class CatalogController extends Controller
 			// print_r(explode('_',$val['value']));
 			// print_r('a'.$isbn);
 			// print_r(explode('_',$val['value'])[1]=='a'.$isbn);
-			if(explode('_',$val['value'])[1]=='a'.$isbn){
+			if( strtolower(explode('_',$val['value'])[1]) == 'a'.strtolower($isbn) ){
 				$catalogue_id = $val['catalogue_id'];
 				$catalogInfo = $cr->get_record_by_id($catalogue_id);
+
 				// print_r($catalogInfo);
 				$marcId = $val['id'];
 				$tagValues = $fv->retrieve($catalogue_id);
