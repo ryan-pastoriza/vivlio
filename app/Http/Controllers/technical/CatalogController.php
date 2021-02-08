@@ -343,6 +343,13 @@ class CatalogController extends Controller
 		// echo '<pre>';
 		// echo var_dump($values);
 		// echo '</pre>';
+		if($values == 0){
+			$id = $marc->get_id_by_tag_field('022');
+			$values = $fv->get_isbn($id, $isbn);
+			// echo '<pre>';
+			// echo var_dump($values);
+			// echo '</pre>';
+		}
 
 		if($values == 0){
 			return json_encode(['catInfo'=>null]);
@@ -553,36 +560,6 @@ class CatalogController extends Controller
 				return null;
 				break;
 		};
-	}
-
-	private function getValuebyCatIDTagFieldandCode($catID,$tagfield,$subField){
-		$tagFieldID = marc_tag_structure::where('tagfield',$tagfield)->select(['id'])->first()['id'];
-		$fv = array_slice(explode('_',FieldValue::where(['id'=>$tagFieldID,'catalogue_id'=>$catID])->first()['value']),1);
-		foreach ($fv as $value) {
-			if($subField==$value[0]){
-				if( strlen($value)>1 ){
-					return substr($value, 1);
-				}else{
-					return null;
-				}
-			}
-		}
-		return null;
-	}
-
-	public function getCatIDFromValueAndTag($value,$tagfield,$subField){
-		$tagFieldID = marc_tag_structure::where('tagfield',$tagfield)->select(['id'])->first()['id'];
-		$fv = array_slice(explode('_',FieldValue::where(['id'=>$tagFieldID,'catalogue_id'=>$catID])->first()['value']),1);
-		foreach ($fv as $value) {
-			if($subField==$value[0]){
-				if( strlen($value)>1 ){
-					return substr($value, 1);
-				}else{
-					return null;
-				}
-			}
-		}
-		return null;
 	}
 
 }

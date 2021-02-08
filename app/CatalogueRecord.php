@@ -84,7 +84,7 @@ class CatalogueRecord extends Model
         $tagFieldID = marc_tag_structure::where('tagfield',$tagfield)->select(['id'])->first()['id'];
         $fv = array_slice(explode('_',FieldValue::where(['id'=>$tagFieldID,'catalogue_id'=>$catID])->first()['value']),1);
         foreach ($fv as $value) {
-            if($subField==$value[0]){
+            if(strtolower($subField)==strtolower($value[0])){
                 if( strlen($value)>1 ){
                     return substr($value, 1);
                 }else{
