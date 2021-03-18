@@ -145,7 +145,7 @@ class Controller extends BaseController
                $data['status'] = $item->status;
                $data['call_num'] = $item->call_num;
                $data['status'] = $item->status;
-               $data['in_a_list'] = (empty($list) ? false : (in_array($item->acc_num, $list)) ? true : false);
+               $data['in_a_list'] =  empty($list) ? false : ( in_array($item->acc_num, $list) ? true : false ) ;
 
                $catalogue = CatalogueRecord::find($item->catalogue_id)->toArray();
                $field_datas =  $field_value->where('catalogue_id',$item->catalogue_id)->get()->toArray();  
