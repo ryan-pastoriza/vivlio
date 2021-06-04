@@ -119,8 +119,8 @@ class CatalogueRecord extends Model
 			$copiesNum 			= Copies::where('status','available')->where('catalogue_id', $catalogue_id)->count();
 			$copiesTotal 		= Copies::where('catalogue_id', $catalogue_id)->count();
 			// Catalogue ID
-			$matType 			= LibMaterialType::where('material_type_id',$cat_rec->material_type_id)->get(['name'])->first();
-			$matType 			= sizeof($matType) >0 ? $matType->name:'N/A';
+			$matType 			= LibMaterialType::where('material_type_id',$cat_rec->material_type_id)->get(['name']);
+			$matType 			= sizeof($matType) >0 ? $matType->first()->name:'N/A';
 			CatalogueRecord::
 			where('catalogue_id',$catalogue_id)
 			->update([
@@ -138,7 +138,7 @@ class CatalogueRecord extends Model
 		$copies       = new Copies();
 		$cat_rec = CatalogueRecord::where('catalogue_id',$catalogue_id)->get(['call_num','material_type_id','accession_info','up_acc'])->first();
 		$id = $catalogue_id;
-		if(!$cat_rec->up_acc){
+		if(!$cat_rec->up_acc || !$cat_rec->accession_info){
 			$record = $this->get_record_by_id($id);
 
 			$isbnIssn			= $this->getValuebyCatIDTagFieldandCode($id,'020','a');
@@ -159,10 +159,13 @@ class CatalogueRecord extends Model
 			$publishingHouse	= $this->getValuebyCatIDTagFieldandCode($id,'264','b');
 			$copyYear			= $this->getValuebyCatIDTagFieldandCode($id,'264','c');
 
+			$accessionInfo = $isbnIssn.'_-ACCINFO-_'.$callNum.'_-ACCINFO-_'.$author.'_-ACCINFO-_'.$title.'_-ACCINFO-_'.$edition.'_-ACCINFO-_'.$volume.'_-ACCINFO-_'.$pages.'_-ACCINFO-_'.$price.'_-ACCINFO-_'.$copyAmt.'_-ACCINFO-_'.$publishingHouse.'_-ACCINFO-_'.$copyYear;
+
+
 			CatalogueRecord::
 			where('catalogue_id',$id)
 				->update([
-					'accession_info' 	=> $isbnIssn.'_-ACCINFO-_'.$callNum.'_-ACCINFO-_'.$author.'_-ACCINFO-_'.$title.'_-ACCINFO-_'.$edition.'_-ACCINFO-_'.$volume.'_-ACCINFO-_'.$pages.'_-ACCINFO-_'.$price.'_-ACCINFO-_'.$copyAmt.'_-ACCINFO-_'.$publishingHouse.'_-ACCINFO-_'.$copyYear,
+					'accession_info' 	=> $accessionInfo,
 					'up_acc' 		=> 1
 				]);
 
